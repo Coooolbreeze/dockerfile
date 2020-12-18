@@ -1,0 +1,6 @@
+# 获取windows的ip
+export WIN_IP=`cat /etc/resolv.conf | grep nameserver | awk '{print $2}'`
+# 删除 ~/.proxychains.conf 中 [ProxyList] 所在行到文件末尾的全部内容
+sed -i '/\[ProxyList\]/,$d' ~/.proxychains.conf
+# 往文件末尾添加socks5设置，这个 20807 是我的 clash 的 socks5 端口号，改成你自己的
+echo -e '[ProxyList]\nsocks5 '${WIN_IP}' 10808' >> ~/.proxychains.conf
