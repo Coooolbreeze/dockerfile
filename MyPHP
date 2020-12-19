@@ -19,14 +19,14 @@ deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-backports main contrib n
 deb https://mirrors.tuna.tsinghua.edu.cn/debian-security buster/updates main contrib non-free\n'\
 > /etc/apt/sources.list
 
+RUN apt-get update && apt-get install -y gcc make git zsh
+
+RUN chsh -s /bin/zsh
+
 RUN mkdir source
 ADD proxychains-ng.tar.gz source/
 WORKDIR source/proxychains-ng
 RUN ./configure
 RUN make && make install
-
-RUN apt-get update && apt-get install -y git && apt-get install -y zsh
-
-RUN chsh -s /bin/zsh
 
 WORKDIR /root

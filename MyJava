@@ -1,4 +1,4 @@
-FROM golang
+FROM openjdk:8
 
 ENV TERM=xterm-256color
 
@@ -28,8 +28,5 @@ ADD proxychains-ng.tar.gz source/
 WORKDIR source/proxychains-ng
 RUN ./configure
 RUN make && make install
-
-RUN go env -w GO111MODULE=on
-RUN go env -w GOPROXY=https://goproxy.cn,direct
 
 WORKDIR /root
