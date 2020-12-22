@@ -1,0 +1,27 @@
+FROM openjdk:11.0.9.1-jdk-buster
+
+ENV TERM=xterm-256color
+
+WORKDIR /root
+
+COPY .antigen.zsh .antigen.zsh
+COPY .zshrc .zshrc
+COPY .p10k.zsh .p10k.zsh
+COPY .proxychains.conf .proxychains.conf
+COPY .ssh/ .ssh/
+ADD proxychains-ng.tar.gz source/
+
+RUN chown root:root .antigen.zsh .zshrc .p10k.zsh .proxychains.conf && \
+  chown root:root -R .ssh && \
+  echo 'deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free\n\
+  deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-updates main contrib non-free\n\
+  deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-backports main contrib non-free\n\
+  deb https://mirrors.tuna.tsinghua.edu.cn/debian-security buster/updates main contrib non-free\n'\
+  > /etc/apt/sources.list && \
+  apt-get update && \
+  apt-get install -y gcc make git zsh && \
+  chsh -s /bin/zsh && \
+  cd source/proxychains-ng && \
+  ./configure && \
+  make && \
+  make install
