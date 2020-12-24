@@ -9,21 +9,16 @@ COPY .zshrc .zshrc
 COPY .p10k.zsh .p10k.zsh
 COPY .proxychains.conf .proxychains.conf
 COPY .ssh/ .ssh/
+ADD maven-3.6.3.tar.gz /opt/
 ADD proxychains-ng.tar.gz source/
 
 RUN chown root:root .antigen.zsh .zshrc .p10k.zsh .proxychains.conf && chown root:root -R .ssh && \
+  echo '\nexport PATH="/opt/maven-3.6.3/bin:$PATH"' >> .zshrc && \
   echo 'deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free\n\
   deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-updates main contrib non-free\n\
   deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-backports main contrib non-free\n\
   deb https://mirrors.tuna.tsinghua.edu.cn/debian-security buster/updates main contrib non-free\n'\
   > /etc/apt/sources.list && \
-  apt-get update && apt-get install -y gcc make git zsh maven && \
-  sed -i "s/<\/mirrors>/\n\
-  <mirror>\n\
-  <id>aliyunmaven<\/id>\n\
-  <mirrorOf>*<\/mirrorOf>\n\
-  <name>阿里云公共仓库<\/name>\n\
-  <url>https:\/\/maven.aliyun.com\/repository\/public<\/url>\n\
-  <\/mirror>\n<\/mirrors>/g" /etc/maven/settings.xml && \
+  apt-get update && apt-get install -y gcc make git zsh && \
   chsh -s /bin/zsh && \
   cd source/proxychains-ng && ./configure && make && make install
